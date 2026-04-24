@@ -1,0 +1,828 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Automated Tender Response System</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+        }
+        .container { 
+            max-width: 1200px; 
+            margin: 0 auto; 
+            padding: 20px;
+        }
+        .header { 
+            background: linear-gradient(135deg, #1a237e, #3949ab);
+            color: white;
+            padding: 30px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .header h1 { margin-bottom: 10px; font-size: 2rem; }
+        .header p { opacity: 0.9; font-size: 1.1rem; }
+
+        .upload-zone { 
+            border: 3px dashed #c5cae9; 
+            border-radius: 12px;
+            padding: 60px 20px;
+            text-align: center;
+            background: white;
+            margin-bottom: 10px;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+        .upload-zone:hover, .upload-zone.dragover { 
+            border-color: #3949ab; 
+            background: #e8eaf6;
+        }
+        #file-input { display: none; }
+
+        .btn-primary {
+            background: #3949ab;
+            color: white;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: background 0.3s;
+        }
+        .btn-primary:hover { background: #283593; }
+
+        .btn-demo {
+            background: #10b981; /* green-500 */
+            color: white;
+            padding: 16px 32px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1.1rem;
+            font-weight: bold;
+            box-shadow: 0 4px 6px rgba(16, 185, 129, 0.3);
+            transition: transform 0.2s, background 0.3s;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            width: 100%;
+            margin-bottom: 20px;
+        }
+        .btn-demo:hover {
+            background: #059669; /* green-600 */
+            transform: translateY(-2px);
+        }
+
+        .progress-container {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            display: none;
+        }
+        .progress-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            font-weight: 600;
+            color: #1a237e;
+        }
+        .progress-bar {
+            height: 12px;
+            background: #e0e0e0;
+            border-radius: 6px;
+            overflow: hidden;
+            margin-bottom: 15px;
+        }
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #4caf50, #8bc34a);
+            width: 0%;
+            transition: width 0.5s ease;
+        }
+        .status-log {
+            background: #f5f5f5;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            max-height: 200px;
+            overflow-y: auto;
+            border-left: 4px solid #3949ab;
+        }
+        .log-entry { padding: 5px 0; border-bottom: 1px solid #e0e0e0; }
+        .log-entry.success { color: #4caf50; }
+        .log-entry.error { color: #f44336; }
+
+        .results-container {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            display: none;
+        }
+        .price-card {
+            background: linear-gradient(135deg, #1a237e, #3949ab);
+            color: white;
+            padding: 25px;
+            border-radius: 12px;
+            margin-bottom: 25px;
+            text-align: center;
+        }
+        .price-amount { 
+            font-size: 3rem; 
+            font-weight: bold; 
+            margin: 10px 0;
+            word-break: break-word;
+        }
+        .confidence-badge {
+            display: inline-block;
+            background: rgba(255,255,255,0.2);
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-size: 1rem;
+        }
+
+        .verification-panel {
+            background: #f3e5f5;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            border-left: 4px solid #7b1fa2;
+        }
+        .verification-panel h3 {
+            color: #7b1fa2;
+            margin-bottom: 15px;
+        }
+        .metric-card {
+            background: white;
+            padding: 15px;
+            border-radius: 6px;
+            text-align: center;
+        }
+        .metric-card strong {
+            display: block;
+            color: #666;
+            font-size: 0.9rem;
+            margin-bottom: 5px;
+        }
+        .metric-value {
+            font-size: 1.5rem;
+            color: #7b1fa2;
+            font-weight: bold;
+        }
+
+        .details-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+        .detail-card {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #3949ab;
+        }
+        .detail-card h4 { color: #1a237e; margin-bottom: 5px; }
+
+        .breakdown-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            display: block;
+            overflow-x: auto;
+            white-space: nowrap;
+        }
+        .breakdown-table th {
+            background: #3949ab;
+            color: white;
+            padding: 12px;
+            text-align: left;
+        }
+        .breakdown-table td {
+            padding: 12px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        .breakdown-table .total-row {
+            font-weight: bold;
+            background: #e8eaf6;
+            font-size: 1.1rem;
+        }
+
+        .download-section {
+            margin-top: 30px;
+            padding-top: 25px;
+            border-top: 2px solid #e0e0e0;
+        }
+        .download-buttons {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+        .download-btn {
+            padding: 15px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            color: white;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            transition: opacity 0.3s;
+        }
+        .download-btn:hover { opacity: 0.9; }
+        .download-btn.word { background: #2b579a; }
+        .download-btn.excel { background: #217346; }
+        .download-btn.zip { background: #f59e0b; color: white; }
+
+        .error-banner {
+            background: #ffebee;
+            color: #c62828;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: none;
+        }
+        .duration-alert {
+            background: #fff3e0;
+            padding: 10px;
+            border-radius: 6px;
+            margin-top: 10px;
+            border-left: 4px solid #f57c00;
+        }
+        .duration-alert.corrected {
+            background: #ffebee;
+            border-left-color: #d32f2f;
+        }
+        .duration-alert.verified {
+            background: #e8f5e9;
+            border-left-color: #388e3c;
+        }
+
+        /* Cold Start Overlay */
+        #cold-start-overlay {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(255, 255, 255, 0.95);
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 0.5s;
+        }
+        .spinner {
+            border: 6px solid #f3f3f3;
+            border-top: 6px solid #3949ab;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            animation: spin 1s linear infinite;
+            margin-bottom: 20px;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Toast Notification */
+        #toast {
+            visibility: hidden;
+            min-width: 250px;
+            background-color: #333;
+            color: #fff;
+            text-align: center;
+            border-radius: 8px;
+            padding: 16px;
+            position: fixed;
+            z-index: 1000;
+            left: 50%;
+            bottom: 30px;
+            transform: translateX(-50%);
+            font-size: 1rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+            opacity: 0;
+            transition: opacity 0.5s, bottom 0.5s, visibility 0.5s;
+        }
+        #toast.show {
+            visibility: visible;
+            opacity: 1;
+            bottom: 50px;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 { font-size: 1.5rem; }
+            .price-amount { font-size: 2rem; }
+            .upload-zone { padding: 40px 15px; }
+            .container { padding: 10px; }
+            .btn-demo { font-size: 1rem; padding: 12px 20px; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Cold Start Overlay -->
+    <div id="cold-start-overlay">
+        <div class="spinner"></div>
+        <h2 class="text-2xl font-bold text-gray-800 mb-2">Waking up the AI engine...</h2>
+        <p class="text-gray-600 text-lg">(10–20 seconds)</p>
+        <div class="flex space-x-2 mt-4">
+            <div class="w-3 h-3 bg-indigo-600 rounded-full animate-bounce"></div>
+            <div class="w-3 h-3 bg-indigo-600 rounded-full animate-bounce" style="animation-delay: 0.1s"></div>
+            <div class="w-3 h-3 bg-indigo-600 rounded-full animate-bounce" style="animation-delay: 0.2s"></div>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast">Demo cleaning tender loaded – processing now...</div>
+
+    <div class="container">
+        <div class="header text-center sm:text-left">
+            <h1>Automated Tender Response System</h1>
+            <p>AI-powered tender pricing with 3-model debate consensus</p>
+        </div>
+
+        <div class="error-banner" id="error-banner"></div>
+
+        <div id="upload-section">
+            <button class="btn-demo" onclick="runDemo()">
+                🚀 Try Demo – Cleaning Tender
+            </button>
+
+            <div class="upload-zone" id="drop-zone">
+                <span class="text-5xl mb-4 block">📁</span>
+                <h3 class="text-xl font-bold mb-2">Drop tender PDF here or click to upload</h3>
+                <p class="text-gray-500 mb-4">Supports: PDF, DOCX, TXT, Images</p>
+                <input type="file" id="file-input" accept=".pdf,.docx,.doc,.txt,.rtf,.png,.jpg,.jpeg" multiple>
+                <button class="btn-primary w-full sm:w-auto" onclick="document.getElementById('file-input').click()">Select Files</button>
+            </div>
+            <div class="text-center text-sm text-gray-500 mt-2 mb-8">
+                💡 Best results with clear PDF tenders (cleaning, construction, security, electrical, etc.)
+            </div>
+        </div>
+
+        <div class="progress-container" id="progress-panel">
+            <div class="progress-header">
+                <span id="progress-status">Initializing...</span>
+                <span id="progress-percent">0%</span>
+            </div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progress-bar"></div>
+            </div>
+            <div class="status-log" id="status-log"></div>
+        </div>
+
+        <div class="results-container" id="results-panel">
+            <div class="price-card">
+                <div style="font-size: 1.1rem; opacity: 0.9;">Recommended Tender Price</div>
+                <div class="price-amount" id="total-price">R 0.00</div>
+                <div class="confidence-badge" id="confidence-badge">Confidence: 0%</div>
+            </div>
+
+            <div class="verification-panel">
+                <h3>📊 Verification & Comparison</h3>
+                <div class="details-grid" id="comparison-grid">
+                    <!-- Populated by JS -->
+                </div>
+                <div id="duration-verification" class="duration-alert" style="display: none;">
+                    <!-- Duration check -->
+                </div>
+            </div>
+
+            <div class="details-grid" id="tender-details"></div>
+
+            <h3 class="text-xl font-bold text-indigo-900 mb-4 mt-6">Detailed Breakdown</h3>
+            <table class="breakdown-table">
+                <thead>
+                    <tr>
+                        <th>Category</th>
+                        <th>Monthly Amount</th>
+                        <th>Contract Total</th>
+                    </tr>
+                </thead>
+                <tbody id="breakdown-body"></tbody>
+            </table>
+
+            <div class="download-section">
+                <h3 class="text-xl font-bold text-gray-800 mb-4">📥 Generated Documents</h3>
+                <div class="download-buttons">
+                    <button class="download-btn word" id="download-word" style="display: none;">
+                        📄 Word Document
+                    </button>
+                    <button class="download-btn excel" id="download-excel" style="display: none;">
+                        📊 Excel Breakdown
+                    </button>
+                    <button class="download-btn zip" id="download-zip" style="display: none;">
+                        📦 Download All Files as ZIP
+                    </button>
+                </div>
+            </div>
+
+            <div class="mt-8 text-center">
+                <button class="btn-primary w-full sm:w-auto" onclick="resetForm()">Process Another Tender</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let selectedFiles = [];
+        let ws = null;
+        let generatedDocs = null;
+
+        // Smart Cold-Start Experience
+        window.addEventListener('DOMContentLoaded', async () => {
+            const overlay = document.getElementById('cold-start-overlay');
+            try {
+                // Ping a lightweight endpoint to check if backend is awake
+                const response = await fetch('/api/models', { method: 'GET', cache: 'no-store' });
+                if (response.ok) {
+                    hideOverlay(overlay);
+                } else {
+                    // Fallback hide
+                    setTimeout(() => hideOverlay(overlay), 3000);
+                }
+            } catch (e) {
+                // Keep polling or hide after a timeout
+                setTimeout(() => hideOverlay(overlay), 10000);
+            }
+        });
+
+        function hideOverlay(overlay) {
+            overlay.style.opacity = '0';
+            setTimeout(() => { overlay.style.display = 'none'; }, 500);
+        }
+
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.className = 'show';
+            setTimeout(() => { toast.className = toast.className.replace('show', ''); }, 3000);
+        }
+
+        // Demo button logic
+        async function runDemo() {
+            showToast('Demo cleaning tender loaded – processing now...');
+            showProgress();
+            try {
+                const response = await fetch('/api/demo', { method: 'POST' });
+                if (!response.ok) throw new Error('Failed to generate demo tender');
+                const data = await response.json();
+                startProcessing(data.filename, data);
+            } catch (error) {
+                showError('Something went wrong. Please refresh the page and try again.');
+            }
+        }
+
+        const dropZone = document.getElementById('drop-zone');
+        const fileInput = document.getElementById('file-input');
+
+        dropZone.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            dropZone.classList.add('dragover');
+        });
+
+        dropZone.addEventListener('dragleave', () => {
+            dropZone.classList.remove('dragover');
+        });
+
+        dropZone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            dropZone.classList.remove('dragover');
+            if (e.dataTransfer.files.length) {
+                handleFiles(e.dataTransfer.files);
+            }
+        });
+
+        fileInput.addEventListener('change', (e) => {
+            if (e.target.files.length) {
+                handleFiles(e.target.files);
+            }
+        });
+
+        function handleFiles(files) {
+            selectedFiles = Array.from(files);
+            uploadAndProcess();
+        }
+
+        async function uploadAndProcess() {
+            if (selectedFiles.length === 0) return;
+
+            showProgress();
+
+            const formData = new FormData();
+            selectedFiles.forEach((file) => {
+                formData.append('files', file);
+            });
+
+            try {
+                const response = await fetch('/api/upload', {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                const data = await response.json();
+                if (!response.ok) {
+                    throw new Error(data.detail || 'PDF too large or unclear – please try a smaller, clearer file');
+                }
+                
+                startProcessing(data.filename, data);
+            } catch (error) {
+                showError(error.message);
+                document.getElementById('progress-panel').style.display = 'none';
+                document.getElementById('upload-section').style.display = 'block';
+            }
+        }
+
+        function showProgress() {
+            document.getElementById('upload-section').style.display = 'none';
+            document.getElementById('progress-panel').style.display = 'block';
+            document.getElementById('results-panel').style.display = 'none';
+            document.getElementById('status-log').innerHTML = '';
+            document.getElementById('error-banner').style.display = 'none';
+        }
+
+        function addLog(message, type = 'info') {
+            const log = document.getElementById('status-log');
+            const entry = document.createElement('div');
+            entry.className = `log-entry ${type}`;
+            entry.textContent = `[${new Date().toLocaleTimeString()}] ${message}`;
+            log.appendChild(entry);
+            log.scrollTop = log.scrollHeight;
+        }
+
+        function updateProgress(percent, status) {
+            document.getElementById('progress-bar').style.width = percent + '%';
+            document.getElementById('progress-percent').textContent = percent + '%';
+            if (status) document.getElementById('progress-status').textContent = status;
+        }
+
+        function startProcessing(filename, uploadData) {
+            const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+            const wsUrl = `${protocol}//${window.location.host}/ws/process`;
+            
+            ws = new WebSocket(wsUrl);
+
+            ws.onopen = () => {
+                ws.send(JSON.stringify({
+                    filename: filename,
+                    config: {}
+                }));
+            };
+
+            ws.onmessage = (event) => {
+                const data = JSON.parse(event.data);
+                handleWebSocketMessage(data);
+            };
+
+            ws.onerror = (error) => {
+                showError('Something went wrong. Please refresh the page and try again.');
+                ws.close();
+            };
+        }
+
+        function handleWebSocketMessage(data) {
+            if (data.step === 'pdf') {
+                updateProgress(10, 'Extracting...');
+                addLog('Extracting tender requirements...');
+            }
+            else if (data.step === 'extracted') {
+                updateProgress(25, 'Extracted');
+                addLog(`Tender: ${data.data.tender_type || 'Unknown'}`, 'success');
+            }
+            else if (data.step === 'search') {
+                updateProgress(30, 'Searching rates...');
+            }
+            else if (data.step === 'rates') {
+                updateProgress(50, 'Rates found');
+            }
+            else if (data.step === 'debate') {
+                updateProgress(55, 'Starting AI debate...');
+            }
+            else if (data.step === 'thinking') {
+                updateProgress(60, data.message);
+            }
+            else if (data.step === 'proposal') {
+                updateProgress(70, 'Proposal received');
+                addLog(data.message, 'success');
+            }
+            else if (data.step === 'complete') {
+                updateProgress(100, 'Complete!');
+                displayResults(data);
+                loadComparison(data.tender_data, data.pricing);
+            }
+            else if (data.step === 'error') {
+                let msg = data.message;
+                // Ensure human-friendly error messages
+                if (msg.toLowerCase().includes('timeout') || msg.toLowerCase().includes('took too long')) {
+                    msg = 'Processing took too long – refresh and try again';
+                } else if (msg.toLowerCase().includes('not found') || msg.toLowerCase().includes('no text')) {
+                    msg = 'No text could be extracted – try a different PDF';
+                } else if (!msg.includes('–')) {
+                    msg = 'Something went wrong. Please refresh the page and try again.';
+                }
+                showError(msg);
+                if (ws) ws.close();
+            }
+        }
+
+        function displayResults(data) {
+            document.getElementById('progress-panel').style.display = 'none';
+            document.getElementById('results-panel').style.display = 'block';
+
+            const pricing = data.pricing || {};
+            const tender = data.tender_data || {};
+
+            const total = pricing.total_contract_value || 0;
+            document.getElementById('total-price').textContent = 'R ' + total.toLocaleString('en-ZA', {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+            });
+
+            const conf = data.debate_result?.confidence || 0;
+            document.getElementById('confidence-badge').textContent = `Confidence: ${conf}%`;
+
+            const detailsHtml = `
+                <div class="detail-card">
+                    <h4>Reference</h4>
+                    <p>${tender.reference || 'N/A'}</p>
+                </div>
+                <div class="detail-card">
+                    <h4>Type</h4>
+                    <p>${tender.tender_type || 'Unknown'}</p>
+                </div>
+                <div class="detail-card">
+                    <h4>Duration</h4>
+                    <p>${tender.duration_months || 12} months</p>
+                </div>
+                <div class="detail-card">
+                    <h4>Workers</h4>
+                    <p>${tender.requirements?.workers || 0} staff</p>
+                </div>
+            `;
+            document.getElementById('tender-details').innerHTML = detailsHtml;
+
+            const monthly = pricing.total_monthly || 0;
+            const duration = tender.duration_months || 12;
+            
+            const items = [
+                ['Labour Costs', pricing.labour_cost],
+                ['Equipment', pricing.equipment_cost],
+                ['Materials', pricing.materials_cost],
+                ['Overheads (15%)', pricing.overheads],
+                ['Profit (15%)', pricing.profit],
+                ['VAT (15%)', pricing.vat],
+            ];
+
+            let tbody = '';
+            items.forEach(([name, amount]) => {
+                const monthlyAmt = amount || 0;
+                const totalAmt = monthlyAmt * duration;
+                tbody += `
+                    <tr>
+                        <td>${name}</td>
+                        <td>R ${monthlyAmt.toLocaleString('en-ZA', {minimumFractionDigits: 2})}</td>
+                        <td>R ${totalAmt.toLocaleString('en-ZA', {minimumFractionDigits: 2})}</td>
+                    </tr>
+                `;
+            });
+
+            tbody += `
+                <tr class="total-row">
+                    <td>TOTAL</td>
+                    <td>R ${monthly.toLocaleString('en-ZA', {minimumFractionDigits: 2})}</td>
+                    <td>R ${(monthly * duration).toLocaleString('en-ZA', {minimumFractionDigits: 2})}</td>
+                </tr>
+            `;
+            document.getElementById('breakdown-body').innerHTML = tbody;
+
+            generatedDocs = data.documents;
+            setupDownloads(generatedDocs);
+        }
+
+        async function loadComparison(tenderData, pricing) {
+            try {
+                const response = await fetch(`/api/tender-comparison?tender_type=${encodeURIComponent(tenderData.tender_type)}&location=${encodeURIComponent(tenderData.location)}`);
+                const comparison = await response.json();
+                
+                const durationResponse = await fetch('/api/finalize-duration', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({tender_data: tenderData, pricing: pricing})
+                });
+                const durationCheck = await durationResponse.json();
+
+                displayVerification(comparison, durationCheck, pricing, tenderData);
+            } catch (e) {
+                console.error('Comparison failed:', e);
+            }
+        }
+
+        function displayVerification(comparison, durationCheck, pricing, tenderData) {
+            const workers = tenderData.requirements?.workers || 1;
+            const area = tenderData.requirements?.area_sqm || 1000;
+            
+            const costPerWorker = pricing.total_monthly / workers;
+            const costPerSqm = pricing.total_monthly / area;
+
+            const grid = document.getElementById('comparison-grid');
+            grid.innerHTML = `
+                <div class="metric-card">
+                    <strong>Cost per Worker</strong>
+                    <div class="metric-value">R ${costPerWorker.toFixed(2)}</div>
+                    <small>Monthly per person</small>
+                </div>
+                <div class="metric-card">
+                    <strong>Cost per m²</strong>
+                    <div class="metric-value">R ${costPerSqm.toFixed(2)}</div>
+                    <small>Monthly rate</small>
+                </div>
+                <div class="metric-card">
+                    <strong>Historical Data</strong>
+                    <div class="metric-value" style="font-size: 1.2rem; color: #666;">
+                        ${comparison.similar_tenders_found} tenders
+                    </div>
+                    <small>${comparison.averages.note || 'Compare with CIDB rates'}</small>
+                </div>
+            `;
+
+            const durationDiv = document.getElementById('duration-verification');
+            durationDiv.style.display = 'block';
+            
+            if (durationCheck.corrected) {
+                durationDiv.className = 'duration-alert corrected';
+                durationDiv.innerHTML = `
+                    <strong>⚠️ Duration Corrected</strong><br>
+                    From ${durationCheck.original_duration} to ${durationCheck.correct_duration} months<br>
+                    <small>New contract value: R ${durationCheck.corrected_pricing?.total_contract_value?.toLocaleString()}</small>
+                `;
+            } else {
+                durationDiv.className = 'duration-alert verified';
+                durationDiv.innerHTML = `
+                    <strong>✓ Duration Verified</strong><br>
+                    ${durationCheck.duration} months
+                `;
+            }
+        }
+
+        function setupDownloads(documents) {
+            const wordBtn = document.getElementById('download-word');
+            const excelBtn = document.getElementById('download-excel');
+            const zipBtn = document.getElementById('download-zip');
+
+            if (documents?.word) {
+                wordBtn.style.display = 'flex';
+                wordBtn.onclick = () => {
+                    window.open(`/api/download/word/${encodeURIComponent(documents.word)}`, '_blank');
+                };
+            }
+
+            if (documents?.excel) {
+                excelBtn.style.display = 'flex';
+                excelBtn.onclick = () => {
+                    window.open(`/api/download/excel/${encodeURIComponent(documents.excel)}`, '_blank');
+                };
+            }
+
+            if (documents?.word || documents?.excel) {
+                zipBtn.style.display = 'flex';
+                zipBtn.onclick = () => {
+                    const params = new URLSearchParams();
+                    if (documents.word) params.append('word', documents.word);
+                    if (documents.excel) params.append('excel', documents.excel);
+                    window.open(`/api/download/zip?${params.toString()}`, '_blank');
+                };
+            }
+        }
+
+        function resetForm() {
+            selectedFiles = [];
+            fileInput.value = '';
+            document.getElementById('upload-section').style.display = 'block';
+            document.getElementById('progress-panel').style.display = 'none';
+            document.getElementById('results-panel').style.display = 'none';
+            document.getElementById('error-banner').style.display = 'none';
+            if (ws) ws.close();
+        }
+
+        function showError(msg) {
+            const banner = document.getElementById('error-banner');
+            banner.textContent = msg;
+            banner.style.display = 'block';
+            // Also hide progress panel and show upload section if it's a websocket error during processing
+            document.getElementById('progress-panel').style.display = 'none';
+            document.getElementById('upload-section').style.display = 'block';
+        }
+    </script>
+</body>
+</html>

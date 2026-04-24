@@ -1,0 +1,17 @@
+venv/
+env/
+__pycache__/
+*.pyc
+.env
+data/
+exports/
+node_modules/
+dist/
+build/
+.vscode/
+.DS_Store
+.env.example
+venv_win/
+backend/workspace/tender_database/*
+!backend/workspace/tender_database/README.md
+models

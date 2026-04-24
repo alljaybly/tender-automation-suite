@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TenderFlow | AI-Powered Tender Response Workspace</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .gradient-text {
+            background: linear-gradient(90deg, #3b82f6, #8b5cf6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .hero-gradient {
+            background: radial-gradient(circle at top right, rgba(59, 130, 246, 0.1), transparent),
+                        radial-gradient(circle at bottom left, rgba(139, 92, 246, 0.1), transparent);
+        }
+    </style>
+</head>
+<body class="bg-slate-50 font-sans">
+    <!-- Navigation -->
+    <nav class="fixed w-full z-50 bg-white/80 backdrop-blur-md border-b border-slate-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 items-center">
+                <div class="flex items-center gap-2">
+                    <div class="bg-blue-600 p-2 rounded-lg">
+                        <i class="fas fa-file-invoice-dollar text-white"></i>
+                    </div>
+                    <span class="text-xl font-bold text-slate-900">TenderFlow</span>
+                </div>
+                <div class="hidden md:flex items-center gap-8">
+                    <a href="#features" class="text-slate-600 hover:text-blue-600 font-medium">Features</a>
+                    <a href="#pricing" class="text-slate-600 hover:text-blue-600 font-medium">Pricing</a>
+                    <form action="/login" method="POST" class="inline">
+                        <button type="submit" class="bg-blue-600 text-white px-6 py-2 rounded-full font-semibold hover:bg-blue-700 transition-all shadow-lg shadow-blue-200">
+                            Launch App
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="relative pt-32 pb-20 overflow-hidden hero-gradient">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-3xl mx-auto">
+                <span class="inline-block py-1 px-3 rounded-full bg-blue-100 text-blue-700 text-sm font-bold mb-6">
+                    NOW WITH AI-DRIVEN PRICING DEBATE
+                </span>
+                <h1 class="text-5xl md:text-6xl font-extrabold text-slate-900 mb-6 leading-tight">
+                    Win More Tenders with <span class="gradient-text">AI Intelligence</span>
+                </h1>
+                <p class="text-xl text-slate-600 mb-10 leading-relaxed">
+                    The all-in-one workspace to analyze, price, and generate winning tender responses in minutes, not days.
+                </p>
+                <div class="flex flex-col sm:flex-row justify-center gap-4">
+                    <form action="/login" method="POST">
+                        <button type="submit" class="w-full sm:w-auto bg-slate-900 text-white px-8 py-4 rounded-xl font-bold text-lg hover:bg-slate-800 transition-all">
+                            Start Building for Free
+                        </button>
+                    </form>
+                    <a href="#features" class="bg-white border border-slate-200 text-slate-700 px-8 py-4 rounded-xl font-bold text-lg hover:bg-slate-50 transition-all">
+                        View Demo
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="py-24 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl font-bold text-slate-900 mb-4">Everything you need to scale</h2>
+                <p class="text-slate-600 max-w-2xl mx-auto">Professional tools designed for businesses taking tender submissions seriously.</p>
+            </div>
+            <div class="grid md:grid-cols-3 gap-8">
+                <!-- Feature 1 -->
+                <div class="p-8 rounded-2xl border border-slate-100 hover:border-blue-200 transition-all hover:shadow-xl group">
+                    <div class="w-12 h-12 bg-blue-50 rounded-xl flex items-center justify-center mb-6 group-hover:bg-blue-600 transition-colors">
+                        <i class="fas fa-brain text-blue-600 group-hover:text-white"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-slate-900 mb-3">Debate Council</h3>
+                    <p class="text-slate-600">Three AI agents debate your pricing strategy to find the perfect balance between winning and profit.</p>
+                </div>
+                <!-- Feature 2 -->
+                <div class="p-8 rounded-2xl border border-slate-100 hover:border-blue-200 transition-all hover:shadow-xl group">
+                    <div class="w-12 h-12 bg-purple-50 rounded-xl flex items-center justify-center mb-6 group-hover:bg-purple-600 transition-colors">
+                        <i class="fas fa-chart-line text-purple-600 group-hover:text-white"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-slate-900 mb-3">Reprice Engine</h3>
+                    <p class="text-slate-600">Instantly optimize your margins for different strategies: aggressive win, max profit, or balanced.</p>
+                </div>
+                <!-- Feature 3 -->
+                <div class="p-8 rounded-2xl border border-slate-100 hover:border-blue-200 transition-all hover:shadow-xl group">
+                    <div class="w-12 h-12 bg-green-50 rounded-xl flex items-center justify-center mb-6 group-hover:bg-green-600 transition-colors">
+                        <i class="fas fa-file-signature text-green-600 group-hover:text-white"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-slate-900 mb-3">Branded Outputs</h3>
+                    <p class="text-slate-600">Generate professional, ready-to-submit Word documents with your company logo and branding.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pricing Section -->
+    <section id="pricing" class="py-24 bg-slate-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl font-bold text-slate-900 mb-4">Simple, Transparent Pricing</h2>
+                <p class="text-slate-600">Start for free, upgrade as you grow.</p>
+            </div>
+            <div class="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+                <!-- Free Tier -->
+                <div class="bg-white p-10 rounded-3xl border border-slate-200 shadow-sm relative overflow-hidden">
+                    <h3 class="text-xl font-bold text-slate-900 mb-2">Free</h3>
+                    <div class="flex items-baseline gap-1 mb-6">
+                        <span class="text-4xl font-extrabold text-slate-900">$0</span>
+                        <span class="text-slate-500">/month</span>
+                    </div>
+                    <ul class="space-y-4 mb-8">
+                        <li class="flex items-center gap-3 text-slate-600">
+                            <i class="fas fa-check text-green-500"></i>
+                            1 Tender analysis / day
+                        </li>
+                        <li class="flex items-center gap-3 text-slate-600">
+                            <i class="fas fa-check text-green-500"></i>
+                            Basic Pricing Engine
+                        </li>
+                        <li class="flex items-center gap-3 text-slate-600">
+                            <i class="fas fa-check text-green-500"></i>
+                            Standard PDF Support
+                        </li>
+                    </ul>
+                    <form action="/login" method="POST">
+                        <button type="submit" class="w-full py-3 rounded-xl border-2 border-slate-900 font-bold hover:bg-slate-900 hover:text-white transition-all">
+                            Get Started
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Pro Tier -->
+                <div class="bg-slate-900 p-10 rounded-3xl border border-slate-800 shadow-2xl relative overflow-hidden">
+                    <div class="absolute top-0 right-0 bg-blue-600 text-white text-xs font-bold px-4 py-1 rounded-bl-lg">
+                        POPULAR
+                    </div>
+                    <h3 class="text-xl font-bold text-white mb-2">Pro</h3>
+                    <div class="flex items-baseline gap-1 mb-6">
+                        <span class="text-4xl font-extrabold text-white">$49</span>
+                        <span class="text-slate-400">/month</span>
+                    </div>
+                    <ul class="space-y-4 mb-8">
+                        <li class="flex items-center gap-3 text-slate-300">
+                            <i class="fas fa-check text-blue-400"></i>
+                            Unlimited Tenders
+                        </li>
+                        <li class="flex items-center gap-3 text-slate-300">
+                            <i class="fas fa-check text-blue-400"></i>
+                            Advanced Scoring & Benchmarking
+                        </li>
+                        <li class="flex items-center gap-3 text-slate-300">
+                            <i class="fas fa-check text-blue-400"></i>
+                            Branded Document Generation
+                        </li>
+                        <li class="flex items-center gap-3 text-slate-300">
+                            <i class="fas fa-check text-blue-400"></i>
+                            Priority AI Debate Council
+                        </li>
+                    </ul>
+                    <button onclick="alert('Upgrade coming soon!')" class="w-full py-3 rounded-xl bg-blue-600 text-white font-bold hover:bg-blue-500 transition-all shadow-lg shadow-blue-900/20">
+                        Upgrade to Pro
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-white border-t border-slate-200 py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <div class="flex items-center justify-center gap-2 mb-6">
+                <div class="bg-slate-900 p-1.5 rounded-lg">
+                    <i class="fas fa-file-invoice-dollar text-white text-sm"></i>
+                </div>
+                <span class="font-bold text-slate-900">TenderFlow</span>
+            </div>
+            <p class="text-slate-500 text-sm">© 2026 TenderFlow AI. All rights reserved.</p>
+        </div>
+    </footer>
+</body>
+</html>
