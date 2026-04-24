@@ -34,7 +34,7 @@ This will:
 If you want cloud pricing debate instead of fallback pricing:
 
 ```bash
-export GROQ_API_KEY="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"
+export GROQ_API_KEY="your_api_key"
 ```
 
 Or copy [.env.example](file:///c:/Users/allan/OneDrive/Documents/tender_system/.env.example) to `.env` and set `GROQ_API_KEY` there.
